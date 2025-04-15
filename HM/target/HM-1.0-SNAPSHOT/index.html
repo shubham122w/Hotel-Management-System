@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hotel Management Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(145deg, #0d1117, #1a1f27);
+      color: #f0f6fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .login-container {
+      background-color: #161b22;
+      padding: 30px;
+      border-radius: 10px;
+      width: 320px;
+      text-align: center;
+      border: 1px solid #30363d;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #58a6ff;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      background-color: #21262d;
+      color: #f0f6fc;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #58a6ff;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #3b8fd3;
+    }
+
+    .error {
+      color: #f28d8d;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    #dashboardPage {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    header {
+      background-color: #161b22;
+      padding: 20px;
+      text-align: center;
+      font-size: 2rem;
+      color: #58a6ff;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .dashboard {
+      display: flex;
+      height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #161b22;
+      padding: 20px;
+      height: 100%;
+      border-right: 1px solid #30363d;
+    }
+
+    .sidebar h3 {
+      color: #58a6ff;
+      margin-bottom: 20px;
+    }
+
+    .sidebar button {
+      width: 100%;
+      background-color: #21262d;
+      color: white;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .sidebar button:hover {
+      background-color: #58a6ff;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      color: #f0f6fc;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #30363d;
+      text-align: center;
+    }
+
+    th {
+      background-color: #21262d;
+    }
+
+    tr:nth-child(even) {
+      background-color: #161b22;
+    }
+
+    .add-section {
+      margin-top: 20px;
+    }
+
+    .action-buttons button {
+      margin: 0 5px;
+      padding: 5px 10px;
+    }
+
+    input::placeholder {
+      color: #8b949e;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Page -->
+  <div class="login-container" id="loginPage">
+    <h2>Hotel Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div id="errorMessage" class="error" style="display: none;">Invalid username or password</div>
+  </div>
+
+  <!-- Hotel Dashboard -->
+  <div id="dashboardPage">
+    <header>🏨 Hotel Management Dashboard</header>
+
+    <div class="dashboard">
+      <div class="sidebar">
+        <h3>Navigation</h3>
+        <button onclick="showStaff()">Staff</button>
+        <button onclick="showGuests()">Guests</button>
+      </div>
+
+      <div class="main-content">
+        <!-- Staff Section -->
+        <div id="staffSection" style="display: none;">
+          <h2>Staff Management</h2>
+          <div class="add-section">
+            <input type="text" id="staffName" placeholder="Name">
+            <input type="email" id="staffEmail" placeholder="Email">
+            <button onclick="addStaff()">➕ Add Staff</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="staffTable"></tbody>
+          </table>
+        </div>
+
+        <!-- Guest Section -->
+        <div id="guestSection" style="display: none;">
+          <h2>Guest Management</h2>
+          <div class="add-section">
+            <input type="text" id="guestName" placeholder="Name">
+            <input type="text" id="guestRoom" placeholder="Room Number">
+            <input type="number" id="guestBill" placeholder="Bill Amount">
+            <input type="text" id="guestFood" placeholder="Food Service (Yes/No)">
+            <input type="text" id="guestCab" placeholder="Cab Service (Yes/No)">
+            <button onclick="addGuest()">➕ Add Guest</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Room No.</th>
+                <th>Bill</th>
+                <th>Food</th>
+                <th>Cab</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="guestTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (username === "admin" && password === "hotel123") {
+        sessionStorage.setItem("loggedIn", true);
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("dashboardPage").style.display = "flex";
+      } else {
+        document.getElementById("errorMessage").style.display = "block";
+      }
+    }
+
+    if (sessionStorage.getItem("loggedIn")) {
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("dashboardPage").style.display = "flex";
+    }
+
+    function showStaff() {
+      document.getElementById("staffSection").style.display = 'block';
+      document.getElementById("guestSection").style.display = 'none';
+    }
+
+    function showGuests() {
+      document.getElementById("staffSection").style.display = 'none';
+      document.getElementById("guestSection").style.display = 'block';
+    }
+
+    function addStaff() {
+      const name = document.getElementById("staffName").value.trim();
+      const email = document.getElementById("staffEmail").value.trim();
+      if (name && email) {
+        const data = JSON.parse(localStorage.getItem("staff")) || [];
+        data.push({ name, email });
+        localStorage.setItem("staff", JSON.stringify(data));
+        loadStaff();
+      } else {
+        alert("Please fill both fields.");
+      }
+    }
+
+    function loadStaff() {
+      const data = JSON.parse(localStorage.getItem("staff")) || [];
+      const tbody = document.getElementById("staffTable");
+      tbody.innerHTML = '';
+      data.forEach((staff, idx) => {
+        const row = `
+          <tr>
+            <td>${staff.name}</td>
+            <td>${staff.email}</td>
+            <td class="action-buttons">
+              <button onclick="deleteStaff(${idx})">❌</button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function deleteStaff(index) {
+      const data = JSON.parse(localStorage.getItem("staff")) || [];
+      data.splice(index, 1);
+      localStorage.setItem("staff", JSON.stringify(data));
+      loadStaff();
+    }
+
+    function addGuest() {
+      const name = document.getElementById("guestName").value.trim();
+      const room = document.getElementById("guestRoom").value.trim();
+      const bill = parseFloat(document.getElementById("guestBill").value.trim());
+      const food = document.getElementById("guestFood").value.trim();
+      const cab = document.getElementById("guestCab").value.trim();
+
+      if (name && room && !isNaN(bill) && food && cab) {
+        const data = JSON.parse(localStorage.getItem("guests")) || [];
+        data.push({ name, room, bill, food, cab });
+        localStorage.setItem("guests", JSON.stringify(data));
+        loadGuests();
+      } else {
+        alert("Please fill all guest fields.");
+      }
+    }
+
+    function loadGuests() {
+      const data = JSON.parse(localStorage.getItem("guests")) || [];
+      const tbody = document.getElementById("guestTable");
+      tbody.innerHTML = '';
+      data.forEach((guest, idx) => {
+        const row = `
+          <tr>
+            <td>${guest.name}</td>
+            <td>${guest.room}</td>
+            <td>$${guest.bill}</td>
+            <td>${guest.food}</td>
+            <td>${guest.cab}</td>
+            <td class="action-buttons">
+              <button onclick="deleteGuest(${idx})">❌</button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function deleteGuest(index) {
+      const data = JSON.parse(localStorage.getItem("guests")) || [];
+      data.splice(index, 1);
+      localStorage.setItem("guests", JSON.stringify(data));
+      loadGuests();
+    }
+
+    window.onload = () => {
+      loadStaff();
+      loadGuests();
+    };
+  </script>
+</body>
+</html>
